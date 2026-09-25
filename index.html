@@ -122,11 +122,11 @@
 <script>
 // ============ SETTINGS: edit these ============
 const CONFIG = {
-  SUPABASE_URL: "https://lnwygfofqnanrxxynvci.supabase.co/rest/v1/",
-  SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxud3lnZm9mcW5hbnJ4eHludmNpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAzMjk5NTEsImV4cCI6MjEwNTkwNTk1MX0.hu69a-vCW4Af_R7Q-P3BK2mQU7BIEAn__0Zww6QxxQM",
-  FAMILY_EMAIL: "marcel.vermes6@icloud.com",      // the one shared account you create in Supabase
-  DOG_NAME: "Max",
-  FAMILY: ["Mom", "Dad", "Marcel", "Marvin"],   // names shown as buttons
+  SUPABASE_URL: "https://YOUR-PROJECT.supabase.co",
+  SUPABASE_ANON_KEY: "YOUR-ANON-KEY",
+  FAMILY_EMAIL: "family@example.com",      // the one shared account you create in Supabase
+  DOG_NAME: "Buddy",
+  FAMILY: ["Mom", "Dad", "Anna", "Ben"],   // names shown as buttons
   WARN_WITHIN_HOURS: 5,                    // warn if fed more recently than this
 };
 // ==============================================
@@ -299,7 +299,13 @@ async function login() {
     password: $("pw").value,
   });
   $("loginBtn").disabled = false;
-  if (error) { $("loginError").textContent = "Wrong password."; return; }
+  if (error) {
+    console.error(error);
+    $("loginError").textContent = error.message === "Invalid login credentials"
+      ? "Invalid login. Check the password AND that FAMILY_EMAIL in index.html matches the Supabase user's email exactly."
+      : "Login failed: " + error.message;
+    return;
+  }
   $("pw").value = "";
   showApp();
 }
